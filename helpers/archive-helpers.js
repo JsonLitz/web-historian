@@ -28,9 +28,9 @@ exports.initialize = function(pathsObj) {
 exports.readListOfUrls = function(callback) {
   fs.readFile(exports.paths.list, 'utf8', (err, success) => {
     if (err){
-      console.log(err)
+      console.log(err);
     }else{
-      var temp = success.split('\n')
+      var temp = success.split('\n');
       // console.log(temp);
       callback(temp);
     }
@@ -41,20 +41,24 @@ exports.readListOfUrls = function(callback) {
 
 exports.isUrlInList = function(url, callback) {
   exports.readListOfUrls(function(data) {
-    callback(data.indexOf(url) > -1);
+    if (data.includes(url)) {
+      callback(true);
+    }else {
+      callback(false);
+    }
   });
 };
 
 exports.addUrlToList = function(url, callback) {
   //takes the input from the client and adds the URL to the queue
-  fs.writeFile(exports.paths.list, url, 'utf8',  callback);
+  fs.appendFile(exports.paths.list, '\n' + url, 'utf8',  callback); // switched writeFile to appendFile and added \n
 
 };
 
 exports.isUrlArchived = function(url, callback) {
   fs.readdir(exports.paths.archivedSites, 'utf8', (err, files) => {
     callback(files.indexOf(url) > -1);
-  })
+  });
   //checks the archive for the existence of the requested url
 };
 
