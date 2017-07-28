@@ -14,6 +14,22 @@ exports.serveAssets = function(res, asset, callback) {
   // Write some code here that helps serve up your static files!
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
+  fs.readFile(archive.paths.siteAssets + asset, 'utf8', function(err, data) {
+    if (err) {
+      fs.readFile(archive.paths.archivedSites + asset, 'utf8', function(err, data) {
+        if (err) {
+          res.writeHead(404, exports.headers);
+          res.end(data);
+        } else {
+          res.writeHead(200, exports.headers);
+          res.end(data);
+        }
+      })
+    } else {
+      res.writeHead(200, exports.headers);
+      res.end(data);
+    }
+  })
 };
 
 
